@@ -25,8 +25,50 @@ Proof.
   intro.
   induction l.
   - auto.
-  - (*urejen_tail želimo uporabiti na a0 in l v hipotezi H*)
+  - simpl.
+    case_eq (a <=? a0)%Z.
+    + destruct l.
+      * intro.
+        apply Zle_bool_imp_le in H0.
+        simpl.
+        auto.
+      * case_eq (a0 <=? z)%Z.
+        apply urejen_tail in H. firstorder.
+        apply Zle_bool_imp_le in H1; auto.
+        apply Zle_bool_imp_le in H0; auto.
+        firstorder.
+        apply Zle_bool_imp_le in H1; auto.
+   + firstorder; simpl.
+     destruct l. 
+     * firstorder.
+       apply Z.leb_gt in H0.
+       apply Z.lt_le_incl in H0.
+       auto.
+     * firstorder. 
+       apply Z.leb_gt in H0. simpl.
+       case (a <=? z)%Z.
+       split; auto.
+       apply Z.lt_le_incl in H0. auto.
+       simpl.
+       admit.
+
+
+
+
+       (*SearchAbout ((?a < ?b)%Z -> (?a <= ?b)%Z).
+
+       simpl.
+
+
+       destruct (z :: l).
+       firstorder.
+       apply Z.leb_gt in H0.
+       apply Z.lt_le_incl in H0.
+       auto.
+       
     
+     
+       SearchAbout (?a <=? ?b)%Z.*)   
   admit.
 Qed.
 
@@ -40,6 +82,7 @@ Proof.
   - intro.
     simpl.
     case (x =? a)%Z.
+    
     admit.
 admit. 
 Qed.

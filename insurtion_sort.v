@@ -5,12 +5,14 @@ Require Import Sorting.
 
 (** Aktiviramo notacijo za sezname. *)
 Local Open Scope list_scope.
+(** Definicija vstavlanja elementov v seznam. **)
 Function vstavi (x:Z) (l: list Z) :=
      match l with
       | nil => x::nil
       | y::l' => if (x <=? y)%Z then x::y::l' else y::(vstavi x l')
 end.
 
+(** Urejanje seznama po principu insertion sort-a. **)
 Fixpoint insert (l:list Z) :=
      match l with
       | nil => nil
@@ -19,6 +21,7 @@ end.
 
 Eval compute in (insert (2 :: 5 :: 1 :: 4 :: nil)%Z).
 
+(** Dodajanje elementa ohranja urejen seznam. **)
 Lemma urejen_t (a: Z) (l: list Z):
   urejen l -> urejen (vstavi a l).
 Proof.
@@ -38,18 +41,37 @@ Proof.
         apply Zle_bool_imp_le in H0; auto.
         firstorder.
         apply Zle_bool_imp_le in H1; auto.
+   (**+ intro. simpl.
+     destruct l; simpl; firstorder.
+     * apply Z.leb_gt in H0.
+       apply Z.lt_le_incl in H0.
+       auto.
+     * apply Z.leb_gt in H0.
+       case_eq**)
+
    + firstorder; simpl.
      destruct l. 
      * firstorder.
        apply Z.leb_gt in H0.
        apply Z.lt_le_incl in H0.
        auto.
-     * firstorder. 
-       apply Z.leb_gt in H0. simpl.
-       case (a <=? z)%Z.
+     * apply Z.leb_gt in H0. simpl.
+       case_eq (a <=? z)%Z.
+       apply Z.lt_le_incl in H0.
        split; auto.
+       apply Zle_bool_imp_le in H1. firstorder.
+       intro.
+       (**
+       SearchPattern ((?a <= ?z)%Z).
+       simpl H.
+       apply IH1.
+       apply Z.leb_gt in H0.
+       split. 
        apply Z.lt_le_incl in H0. auto.
+       
        simpl.
+       firstorder.
+       **)
        admit.
 
 
